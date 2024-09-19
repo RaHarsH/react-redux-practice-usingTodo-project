@@ -2,7 +2,9 @@ import React from 'react'
 
 const App = () => {
   return (
-    <div>App</div>
+    <div>
+      <h2>Learn about react redux and redux toolkit</h2>
+    </div>
   )
 }
 
