@@ -1,10 +1,15 @@
 import React from 'react'
+import AddTodo from './components/AddTodo'
+import Todos from './components/Todos'
+import './App.css'
 
 const App = () => {
   return (
-    <div>
-      <h2>Learn about react redux and redux toolkit</h2>
-    </div>
+    <>
+    <h1 className='text-5xl'>Learn about react-redux & redux-toolkit</h1>
+      <AddTodo />
+      <Todos />
+    </>
   )
 }
 
