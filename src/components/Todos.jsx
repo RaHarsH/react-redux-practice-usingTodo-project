@@ -1,35 +1,69 @@
-import React, { useEffect } from 'react'
-import { useSelector, useDispatch } from 'react-redux'
-import { removeTodo } from '../features/todo/TodoSlice'
+import React, { useEffect, useRef, useState } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { removeTodo, updateTodo } from '../features/todo/TodoSlice';
 
 function Todos() {
-  // useSelector always takes a callBack where you get the access to the state
-  let todos = useSelector(state => state.todos)
-  const dispatch = useDispatch()
+  const todos = useSelector((state) => state.todos);
+  const dispatch = useDispatch();
 
-  // tryin to store it in localStorage
-  // Not Working
-  
-  // useEffect(() => {
-  //   todos = JSON.parse(localStorage.getItem("todos"))
-  // }, [])
+  const [isEditable, setIsEditable] = useState(null)
+  const [editMsg, setEditMsg] = useState('')
+  const [inputLength, setInputLength] = useState(0)
 
-  // useEffect(() => {
-  //   localStorage.setItem("todos", JSON.stringify(todos))
-  // }, [todos])
+  // Handle the edit button click
+  const handleEdit = (todo) => {
+    setIsEditable(todo.id)
+    setEditMsg(todo.text)
+  }
+
+  const handleUpdate = (todo) => {
+    // Dispatch the update action with the new text
+    dispatch(updateTodo({ id: todo.id, text: editMsg }));
+    setIsEditable(null); 
+    setEditMsg(''); 
+  };
+
+  const inputRef = useRef(null)
+
+  useEffect(() => {
+    setInputLength(inputRef.current.value.length)
+    console.log(inputLength);
+  }, [editMsg])
 
   return (
     <>
-    <div>Todos</div>
-    <ul className="list-none">
+      <div>Todos</div>
+      <ul className="list-none">
         {todos.map((todo) => (
           <li
             className="mt-4 flex justify-between items-center bg-zinc-800 px-4 py-2 rounded"
             key={todo.id}
           >
-            <div className='text-white'>{todo.text}</div>
+            <input
+              ref={inputRef}
+              type="text"
+              className={`bg-zinc-800 border-none px-2 text-white w-[60vw]`}
+              value={isEditable === todo.id ? editMsg : todo.text} 
+              readOnly={isEditable !== todo.id} // Only editable when in edit mode
+              onChange={(e) => setEditMsg(e.target.value)} 
+            />
+            {isEditable === todo.id ? (
+              <button
+                onClick={() => handleUpdate(todo)}
+                className="bg-white text-black px-4 py-1 rounded-md font-semibold relative"
+              >
+                Update
+              </button>
+            ) : (
+              <button
+                onClick={() => handleEdit(todo)} // Enter edit mode when clicking "Edit"
+                className="bg-white text-black px-4 py-1 rounded-md font-semibold relative"
+              >
+                Edit
+              </button>
+            )}
             <button
-            onClick={() => dispatch(removeTodo(todo.id))}
+              onClick={() => dispatch(removeTodo(todo.id))}
               className="text-white bg-red-500 border-0 py-1 px-4 focus:outline-none hover:bg-red-600 rounded text-md"
             >
               <svg
@@ -51,7 +85,7 @@ function Todos() {
         ))}
       </ul>
     </>
-  )
+  );
 }
 
-export default Todos
+export default Todos;
