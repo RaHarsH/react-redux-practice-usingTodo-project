@@ -1,6 +1,4 @@
-Below is a sample `README.md` file for your React-Redux Todo project. It outlines how you learned React-Redux and Redux Toolkit, the concepts of a single source of truth, store configuration, slices, and the use of `useSelector` and `useDispatch`.
-
----
+--
 
 # React Redux Todo Project
 
